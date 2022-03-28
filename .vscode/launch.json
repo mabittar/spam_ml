@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "SPAM-ML",
+      "type": "python",
+      "request": "launch",
+      "stopOnEntry": false,
+      "python": "${workspaceRoot}/.venv/bin/python",
+      "module": "uvicorn",
+      "args": [
+        "--reload",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "3051",
+        "--log-level",
+        "debug",
+        "app:app"
+      ],
+      "cwd": "${workspaceRoot}",
+      "debugOptions": [
+        "WaitOnAbnormalExit",
+        "WaitOnNormalExit",
+        "RedirectOutput"
+      ],
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
