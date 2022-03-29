@@ -4,27 +4,19 @@ from typing import Optional
 import enum
 import sqlalchemy
 from pydantic import BaseModel, EmailStr, Field, validator
+from sqlalchemy import Column, String, DateTime, Enum, Integer
 
-from database.session import metadata
-
-
-class UserRole(enum.Enum):
-    super_admin = "super admin"
-    admin = "admin"
-    user = "user"
+from database.base_class import Base
 
 
-users = sqlalchemy.Table(
-    "users",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("email", sqlalchemy.String(120), unique=True),
-    sqlalchemy.Column("password", sqlalchemy.String(255)),
-    sqlalchemy.Column("full_name", sqlalchemy.String(200)),
-    sqlalchemy.Column("phone", sqlalchemy.String(13)),
-    sqlalchemy.Column("created_at", sqlalchemy.DateTime, nullable=False, server_default=sqlalchemy.func.now()),
-    sqlalchemy.Column("role", sqlalchemy.Enum(UserRole), nullable=False, server_default=UserRole.user.name)
-)
+class User(Base):
+    id: Column(Integer, primary_key=True, autoincrement=True)
+    email: str = Column(String(120), unique=True)
+    password: str = Column(String(255))
+    full_name: str = Column(String(200))
+    phone: str = Column(String(13))
+    created_at: datetime = Column(DateTime, nullable=False, server_default=sqlalchemy.func.now())
+    role: str = Column(Enum("super_admin", "admin", "user"), nullable=False)
 
 
 class FullNameField(str):
@@ -41,6 +33,12 @@ class FullNameField(str):
             return f"{last_name[-1].capitalize()}, {first_name.capitalize()}"
         except:
             raise ValueError("Full Name must be at least two names")
+
+
+class UserRole(enum.Enum):
+    super_admin = "super admin"
+    admin = "admin"
+    user = "user"
 
 
 class BaseUser(BaseModel):

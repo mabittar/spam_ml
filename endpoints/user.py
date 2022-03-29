@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from typing import List, Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,7 +12,9 @@ from starlette import status
 
 import crud
 import models
+from crud.user.user import user
 from database.session import get_db
+from models.user import User
 from settings import SECRET_KEY, PROJECT_NAME
 from infrastructure.security import get_password_hash, create_access_token
 from models import UserSignOut, UserSignIn, BaseUser
@@ -50,22 +53,22 @@ def get_current_user(
     status_code=201
     )
 async def create_user(
-        user: UserSignIn,
+        user_in: UserSignIn,
         session: AsyncSession = Depends(get_db)
 ) -> Any:
     """
         Create new user.
         """
-    user = crud.user.get_by_email(session, email=user.email)
-    if user:
+    user_db = await session.execute(select(User).where(User.email == user_in.email))
+    if user_db:
         raise HTTPException(
             status_code=400,
             detail="The user with this username already exists in the system.",
         )
 
-    user.password = get_password_hash(user.password)
+    user_db.password = get_password_hash(user.password)
 
-    created_user = crud.user.create(session, obj_in=user)
+    created_user = await user.create(session, obj_in=user_in)
     token = create_access_token(created_user)
     response = UserSignOut(
         full_name=created_user["full_name"],
@@ -88,7 +91,7 @@ def read_users(
     """
     Retrieve users.
     """
-    listed_users = crud.user.get_multi(db, skip=skip, limit=limit)
+    listed_users = user.get_multi(db, skip=skip, limit=limit)
     return listed_users
 
 

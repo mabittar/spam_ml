@@ -1,1 +1,1 @@
-from .user import users, BaseUser, UserSignIn, UserSignOut
+from .user import User, BaseUser, UserSignIn, UserSignOut

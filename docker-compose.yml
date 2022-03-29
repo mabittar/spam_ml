@@ -16,7 +16,8 @@ services:
 
   db:
     build: database.Dockerfile
-    
+   volumes:
+      - postgresql_data:/var/lib/postgresql/data/
     expose:
       - 5432
     environment:

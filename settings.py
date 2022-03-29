@@ -1,7 +1,10 @@
+import logging
 import secrets
 from starlette.config import Config
 
 from starlette.datastructures import Secret
+
+logger = logging.getLogger(__name__)
 
 
 config = Config(".env")
