@@ -1,6 +1,7 @@
 alembic==1.7.7
 anyio==3.5.0
 asgiref==3.5.0
+asyncio==3.4.3
 asyncpg==0.25.0
 cffi==1.15.0
 click==8.0.4
@@ -16,6 +17,7 @@ idna==3.3
 Mako==1.2.0
 MarkupSafe==2.1.1
 passlib==1.7.4
+project-name==0.2.175
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
 pyasn1==0.4.8
@@ -28,5 +30,6 @@ six==1.16.0
 sniffio==1.2.0
 SQLAlchemy==1.4.32
 starlette==0.17.1
+tenacity==8.0.1
 typing_extensions==4.1.1
 uvicorn==0.17.6
