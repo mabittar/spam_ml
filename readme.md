@@ -55,7 +55,9 @@ target_metadata = Base.metadata
 ```
 executar na linha de comando:
 
-`
-alembic revision --autogenerate -m "create first migrations"
-alembic upgrade head
-`
+```bash
+$ alembic revision --autogenerate -m "create first migrations"
+
+$ alembic upgrade head
+
+```
