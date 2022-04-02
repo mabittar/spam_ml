@@ -10,7 +10,7 @@ from fastapi import APIRouter
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router = APIRouter(tags=["health_check"])
 
 max_tries = 60 * 5  # 5 minutes
 wait_seconds = 1

@@ -1,20 +1,29 @@
 import logging
+from functools import lru_cache
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.crud.user.user import user_controller
+from app.crud.user import user_controller
 from app.database.session import get_session
 from app.models import UserSignIn
-from app.settings import settings
 from tenacity import after_log, before_log, retry, stop_after_attempt, wait_fixed
 
+from app.settings import Settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 max_tries = 60 * 5  # 5 minutes
 wait_seconds = 1
+
+
+@lru_cache()
+def get_settings():
+    return Settings()
+
+
+settings = get_settings()
 
 
 @retry(
@@ -32,20 +41,12 @@ async def init_db(db: Session = Depends(get_session)) -> None:
     user_db = await user_controller.get_by_email(db, email=settings.FIRST_SUPERUSER)
     if not user_db:
         user_in = UserSignIn(
-            full_name=FIRST_SUPERUSER,  # type: ignore
+            full_name=settings.FIRST_SUPERUSER,  # type: ignore
             password=first_pass,
             role="super admin",
-            email=FIRST_SUPERUSER_EMAIL  # type: ignore
-            
+            email=settings.FIRST_SUPERUSER_EMAIL,  # type: ignore
+            document_number="98765432100"
         )
-        user_controller.create(db, obj_in=user_in)
+        await user_controller.create(db, obj_in=user_in)
 
-
-def main() -> None:
-    logger.info("Initializing service")
-    init_db(db=get_session())
-    logger.info("Service finished initializing")
-
-
-if __name__ == "__main__":
-    main()
+        return user_in

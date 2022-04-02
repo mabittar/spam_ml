@@ -1,3 +1,4 @@
+import logging
 from typing import List, Any
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -9,20 +10,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app.crud import user
-from app.crud.user.user import user_controller
+from app.crud.user import user_controller
 from app.database.session import get_session
 from app.models.user import User
-from app.settings import SECRET_KEY, PROJECT_NAME
+from app.settings import settings
 from app.infrastructure.security import get_password_hash, create_access_token
 from app.models import UserSignOut, UserSignIn, BaseUser
 from app.models.token import TokenPayload
 
-router = APIRouter()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+router = APIRouter(tags=["Users"], prefix="/users")
 
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{PROJECT_NAME}/login/access-token"
+    tokenUrl=f"{settings.PROJECT_NAME}/login/access-token"
 )
 
 
@@ -30,8 +33,9 @@ def get_current_user(
         db: Session = Depends(get_session), token: str = Depends(reusable_oauth2)
 ) -> User:
     try:
+        logger.info("Get current user")
         payload = jwt.decode(
-            token, str(SECRET_KEY), algorithms=[Security.ALGORITHM]
+            token, str(settings.SECRET_KEY), algorithms=[Security.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
@@ -48,7 +52,7 @@ def get_current_user(
 @router.post(
     "/register/",
     response_model=UserSignOut,
-    status_code=201
+    status_code=status.HTTP_201_CREATED
     )
 async def create_user(
         user_in: UserSignIn,
@@ -57,11 +61,12 @@ async def create_user(
     """
         Create new user.
         """
+    logger.info("Register new user")
     user_db = await user_controller.get_by_email(db=session, email=user_in.email)
     if user_db:
         raise HTTPException(
             status_code=400,
-            detail="The user with this username already exists in the system.",
+            detail="The user with this email already exists in the system.",
         )
 
     user_db.password = get_password_hash(user_in.password)
@@ -73,23 +78,32 @@ async def create_user(
         email=created_user["email"],
         phone=created_user["phone"],
         created_at=created_user["created_at"],
+        document_number=created_user["document_number"],
         last_modified_at=created_user["last_modified_at"],
         role=created_user["role"],
-        token=token
+        token=token,
     )
     return response
 
 
 @router.get("/", response_model=List[BaseUser])
-def read_users(
+async def read_users(
     db: AsyncSession = Depends(get_session),
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 30,
 ) -> Any:
     """
     Retrieve users.
     """
-    listed_users = user.get_multi(db, skip=skip, limit=limit)
+    logger.info("Get listed users")
+    listed_users = await user_controller.get_multi(db, skip=skip, limit=limit)
     return listed_users
+
+
+@router.get("/{email}", status_code=status.HTTP_200_OK, response_model=UserSignOut)
+async def get_user_by_id(email: int, db: AsyncSession = Depends(get_session)):
+    logger.info("Get user by email")
+    return await user_controller.get_by_email(db=db, email=email)
+
 
 

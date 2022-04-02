@@ -24,9 +24,9 @@ verificar no arquivo alembic.ini se está apontando para a pasta de configuracoe
 `
 script_location = app/database/migrations
 `
-e comentar a variável:
+e a variável:
 
-`#sqlalchemy.url = driver://user:pass@localhost/dbname`
+`#sqlalchemy.url = `
 
 editar o arquivo envp.py:
 
@@ -50,10 +50,11 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+from app.models.user import User
+target_metadata = [Base.metadata]
 ...
 ```
-executar na linha de comando:
+executar na linha de comando para criar as tabelas no banco de dados:
 
 ```bash
 $ alembic revision --autogenerate -m "create first migrations"
@@ -61,3 +62,4 @@ $ alembic revision --autogenerate -m "create first migrations"
 $ alembic upgrade head
 
 ```
+

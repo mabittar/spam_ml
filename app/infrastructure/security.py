@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
+from traceback import format_exc
 from typing import Any, Union
 
-from app.settings import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY
+from fastapi import HTTPException, status
+
+from app.settings import settings
 from jose import jwt
 from passlib.context import CryptContext
 
@@ -18,14 +21,16 @@ def create_access_token(
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     to_encode = {"exp": expire, "sub": str(subject)}
     try:
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
-    except Exception as ex:
-        raise ex
+    except Exception:
+        str_tb = format_exc()
+        raise HTTPException(status.HTTP_404_NOT_FOUND,
+                            detail=str_tb)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
