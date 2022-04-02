@@ -1,10 +1,10 @@
-#Machine Learning Model using FastAPI
+# Machine Learning Model using FastAPI
 
 ## Configuracoes iniciais
 requisitos básicos:
 
 `
-pip install alembic asyncio asyncpg fastapi psycopg2 psycopg2[binary] python-jose tenacity pydantic[emailvalidator]
+pip install alembic asyncio asyncpg fastapi psycopg2 psycopg2[binary] python-jose tenacity pydantic[emailvalidator] python-multipart  
 `
 ## Configuracao de Ambiente
 
