@@ -1,4 +1,3 @@
-import asyncio
 from functools import lru_cache
 
 from fastapi import FastAPI
@@ -7,9 +6,8 @@ from urllib.error import HTTPError
 from urllib.request import Request
 from starlette.responses import JSONResponse
 
-from .endpoints import health_check as health_check_endpoint
-from .endpoints import user as user_endpoint
-from settings import Settings
+from .settings import Settings
+from .endpoints import enpoints_list
 from .infrastructure.error_handler import ErrorMessage
 
 
@@ -21,18 +19,15 @@ def get_settings():
 settings = get_settings()
 
 
-app = FastAPI(title=settings.PROJECT_NAME, docs_url=f"/docs/")
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    docs_url=f"/docs/",
+    version="1.0.0",
+)
 
-app.include_router(health_check_endpoint, tags=["health_check"])
-app.include_router(user_endpoint, prefix="/users", tags=["user"])
-
-
-@app.get("/")
-def home():
-    template = f'''
-        <p>Hello, {vars(settings)}!</p>
-        '''
-    return template
+if len(enpoints_list) > 0:
+    for endpoint in enpoints_list:
+        app.include_router(endpoint)
 
 
 @app.exception_handler(HTTPError)

@@ -48,6 +48,7 @@ SQLALCHEMY_DATABASE_URI: PostgresDsn = PostgresDsn.build(
         port=settings.POSTGRES_PORT,
         host=settings.POSTGRES_SERVER,
         path=f"/{settings.POSTGRES_DB or ''}",
+        query="prepared_statement_cache_size=500",
     )
 
 
