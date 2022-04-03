@@ -17,10 +17,6 @@ a
 app/__init__.py,6/b/6b5a07a517e9a3845a279675e888c81b77b9d712
 D
 app/database/base.py,1/1/11edfc636b79eee74c313c9f75dbb90a5781ecf5
-9
-	readme.md,2/7/275d783e298228506068436512433d343feb52aa
-;
-alembic.ini,d/8/d84513684d01938b65661cf0358065b11872e9bf
 D
 app/crud/__init__.py,0/8/0852f79d8bd7e43ead5975497bf38c75f504c306
 C

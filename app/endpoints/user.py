@@ -14,7 +14,7 @@ from app.crud.user import user_controller
 from app.database.session import get_session
 from app.models.user import User
 from app.settings import settings
-from app.infrastructure.security import get_password_hash, create_access_token
+from app.infrastructure.security import create_access_token
 from app.models import UserSignOut, UserSignIn, BaseUser
 from app.models.token import TokenPayload
 
@@ -62,27 +62,27 @@ async def create_user(
         Create new user.
         """
     logger.info("Register new user")
-    user_db = await user_controller.get_by_email(db=session, email=user_in.email)
+    user_db = await user_controller.get_by_email(session=session, email=user_in.email)
     if user_db:
         raise HTTPException(
             status_code=400,
             detail="The user with this email already exists in the system.",
         )
-
-    user_db.password = get_password_hash(user_in.password)
+    logger.info("Creating new user")
 
     created_user = await user_controller.create(session, obj_in=user_in)
-    token = create_access_token(created_user)
+    await session.commit()
+    await session.refresh(created_user)
     response = UserSignOut(
-        full_name=created_user["full_name"],
-        email=created_user["email"],
-        phone=created_user["phone"],
-        created_at=created_user["created_at"],
-        document_number=created_user["document_number"],
-        last_modified_at=created_user["last_modified_at"],
-        role=created_user["role"],
-        token=token,
+        id=created_user.id,
+        full_name=created_user.full_name,
+        email=created_user.email,
+        phone=created_user.phone,
+        created_at=created_user.created_at,
+        document_number=created_user.document_number,
+        username=created_user.username
     )
+    logger.info("Returning user created")
     return response
 
 
@@ -100,10 +100,10 @@ async def read_users(
     return listed_users
 
 
-@router.get("/{email}", status_code=status.HTTP_200_OK, response_model=UserSignOut)
-async def get_user_by_id(email: int, db: AsyncSession = Depends(get_session)):
-    logger.info("Get user by email")
-    return await user_controller.get_by_email(db=db, email=email)
+@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=UserSignOut)
+async def get_user_by_id(_id: int, session: AsyncSession = Depends(get_session)):
+    logger.info("Get user by id")
+    return await user_controller.get(session=session, id=_id)
 
 
 

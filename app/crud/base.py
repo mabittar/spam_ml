@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-
+from sqlalchemy import update
 from app.database.base import Base
 
 
@@ -24,23 +24,25 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.model = model
 
     async def get(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
-        query = select(self.model).filter(self.model.id == id).first()
+        query = select(self.model).where(self.model.id == id)
         result = await db.execute(query)
+        result = result.scalars().one()
         return result
 
     async def get_multi(
         self, db: AsyncSession, *, skip: int = 0, limit: int = 5000
     ) -> List[ModelType]:
-        query = select(self.model).order_by(self.model.id).offset(skip).limit(limit).all()
+        query = select(self.model).order_by(self.model.id).offset(skip).limit(limit)
         result = await db.execute(query)
+        result = result.scalars().all()
         return result
 
     async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = self.model(**obj_in_data)  # typ
         db.add(db_obj)
-        await db.commit()
         await db.refresh(db_obj)
+        await db.commit()
         return db_obj
 
     async def update(
@@ -58,14 +60,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        db.add(db_obj)
+        db_obj = update(db_obj).execution_options(synchronize_session="fetch")
+        await db.execute(db_obj)
         await db.commit()
-        await db.refresh(db_obj)
         return db_obj
 
     async def remove(self, db: AsyncSession, *, id: int) -> ModelType:
         query = select(self.model).filter(self.model.id == id).first()
         result = await db.execute(query)
+        result = result.scalars().one()
         await db.delete(result)
         await db.commit()
         return result
