@@ -6,6 +6,7 @@ from urllib.error import HTTPError
 from urllib.request import Request
 from starlette.responses import JSONResponse
 
+from app.database.session import database
 from .settings import Settings
 from .endpoints import enpoints_list
 from .infrastructure.error_handler import ErrorMessage

@@ -22,5 +22,5 @@ database = Database(SQLALCHEMY_DATABASE_URI)
 
 
 async def get_session() -> AsyncGenerator:
-    async with SessionLocal().begin() as session:
+    async with SessionLocal() as session:
         yield session

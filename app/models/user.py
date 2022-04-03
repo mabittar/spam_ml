@@ -15,14 +15,16 @@ logger = logging.getLogger(__name__)
 
 
 class User(Base):
-    id: Column(Integer, primary_key=True, autoincrement=True)
-    email: str = Column(String(120), unique=True)
-    password: str = Column(String(255))
+    id: Column(Integer, primary_key=True, autoincrement=True, index=True)
+    email: str = Column(String(120), unique=True, index=True, nullable=False)
+    password: str = Column(String(255), nullable=False)
     full_name: str = Column(String(200))
+    username: str = Column(String(200), index=True, unique=True, nullable=False)
     document_number: str = Column(String(14), nullable=False, unique=True)
     phone: str = Column(String(13), nullable=True)
     created_at: datetime = Column(DateTime, nullable=False, server_default=sqlalchemy.func.now())
-    role: str = Column(Enum("super_admin", "admin", "user", name="user_role", create_type=False), nullable=False, default="user")
+    # TODO: fix migrations/vversions to handle with enum column
+    # role: str = Column(Enum("super_admin", "admin", "user", name="user_role", create_type=False), nullable=False, default="user")
 
     # required in order to access columns with server defaults
     # or SQL expression defaults, subsequent to a flush, without
@@ -49,7 +51,7 @@ class FullNameField(str):
 
 
 class UserRole(enum.Enum):
-    super_admin = "super admin"
+    super_admin = "super_admin"
     admin = "admin"
     user = "user"
 
@@ -80,7 +82,8 @@ class BaseUser(BaseModel):
 
 class UserSignIn(BaseUser):
     password: str = Field(min_length=6, description="User Password")
-    role: Optional[str]
+    username: str = Field(..., min_length=3,  description="Username to login")
+    # role: Optional[str]
     phone: Optional[str]
 
     class Config:
@@ -88,8 +91,8 @@ class UserSignIn(BaseUser):
 
 
 class UserSignOut(BaseUser):
+    id: int
     created_at: datetime
-    last_modified_at: datetime
-    token: str
-    role: UserRole
+    # role: UserRole
     phone: Optional[str]
+    username: str
