@@ -1,12 +1,12 @@
 # Machine Learning Model using FastAPI
 
-## Configuracoes iniciais
+## Configurações iniciais
 requisitos básicos:
 
 `
 pip install alembic asyncio asyncpg fastapi psycopg2 psycopg2[binary] python-jose tenacity pydantic[emailvalidator] python-multipart  
 `
-## Configuracao de Ambiente
+## Configuração de Ambiente
 
 
 ## Banco de dados e conexões
@@ -63,3 +63,9 @@ $ alembic upgrade head
 
 ```
 
+## Autenticação do usuário
+
+Para autenticar um usuário primeiramente é necessário criar um usuário utilizando o endpoint `user/register`. 
+Após criá-lo utilize o endpoint `/login/` fornecendo o username e a senha preenchidas no cadastro do registro.
+
+Você irá receber um token com validade de uma hora. Esse token será sua autenticação para utilizar os serviços de verificação de Spam.
