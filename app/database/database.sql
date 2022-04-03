@@ -4,11 +4,11 @@ CREATE SCHEMA IF NOT EXISTS spam_ml DEFAULT CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS spam_ml.User (
   id INT(11) NOT NULL AUTO_INCREMENT,
-  user_key VARCHAR(36) NOT NULL,
   email VARCHAR(120) NOT NULL UNIQUE,
-  user_role enum("super admin", "admin", "user") NOT NULL,
-  password VARCHAR(120),
+  password VARCHAR(255) NOT NULL,
   full_name VARCHAR(120) NOT NULL,
+  username VARCHAR(200) NOT NULL UNIQUE,
+  document_number VARCHAR(14) NOT NULL UNIQUE,
   phone VARCHAR(120) NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

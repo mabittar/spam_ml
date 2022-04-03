@@ -19,5 +19,3 @@ D
 app/database/base.py,1/1/11edfc636b79eee74c313c9f75dbb90a5781ecf5
 D
 app/crud/__init__.py,0/8/0852f79d8bd7e43ead5975497bf38c75f504c306
-C
-app/models/token.py,0/d/0dc696b25b42c7b7ad86949c859d50a7f73fa750

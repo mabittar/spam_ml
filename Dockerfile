@@ -1,8 +1,8 @@
 # pull official base image
-FROM python:latest
+FROM tiangolo/uvicorn-gunicorn:python3.9
 
 # set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -20,4 +20,6 @@ COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r requirements.txt
 
 # add app
-COPY . /usr/src/app/
+COPY ./app ./
+ENV LOG_LEVEL info
+ENV PYTHONPATH=.
