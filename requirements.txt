@@ -72,4 +72,3 @@ typing_extensions==4.1.1
 uvicorn==0.17.6
 validate-docbr==1.10.0
 wcwidth==0.2.5
-yattag==1.14.0
