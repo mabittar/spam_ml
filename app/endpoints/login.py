@@ -12,7 +12,7 @@ router = APIRouter(prefix="/login", tags=["Authentication"])
 
 @router.post("/")
 async def login(request: OAuth2PasswordRequestForm = Depends(), session: AsyncSession = Depends(get_session)):
-    user: UserSignIn = await user_controller.get_by_username(session=session, username=request.username)
+    user: UserSignIn = await user_controller.get_by_username(session=session, username=request.username)  # type: ignore
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid Credentials")

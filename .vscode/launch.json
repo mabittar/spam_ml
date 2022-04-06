@@ -2,6 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: Arquivo Atual",
+      "python": "${workspaceRoot}/.venv/bin/python",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceRoot}",
+    },
+
+    {
       "name": "SPAM-ML",
       "type": "python",
       "request": "launch",
