@@ -32,5 +32,3 @@ O
 app/settings.py,b/0/b08759b2a00bbd04e3007be702a4a650f86024df
 N
 app/infrastructure/security.py,f/1/f167e3149daedd2ee1c5e70ce7973bd642a48aaa
-@
-requirements.txt,1/9/19359a61ae2446b51b549167b014da2fcf265768
