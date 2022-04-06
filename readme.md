@@ -69,3 +69,30 @@ Para autenticar um usuário primeiramente é necessário criar um usuário utili
 Após criá-lo utilize o endpoint `/login/` fornecendo o username e a senha preenchidas no cadastro do registro.
 
 Você irá receber um token com validade de uma hora. Esse token será sua autenticação para utilizar os serviços de verificação de Spam.
+
+## Docker / Containers
+Para utilizar a API diretamente nos container, garanta que o docker-compose esteja instalado e faća:
+```bash
+$ docker-compose -f docker-compose.yml up -d --build 
+```
+
+Esse comando irá executar o arquivo docker-compose.yml, que por sua parte irá realizar primeiramente o build do banco
+de dados do Postgres executando o arquivo database.Dockerfile, assim que o banco de dados estiver disponível, irá 
+executar o build da nossa aplicaćão através do arquivo Dockerfile. Quando a aplicaćão estiver de pé execute o comando
+
+```bash
+$ docker ps -a
+```
+
+ambos os containers devem estar com o status UP.
+
+para verificar os status do banco de dados execute:
+
+```bash 
+$  docker-compose exec db psql --username=postgres_user --dbname=spam_ml
+```
+
+para listar as tabelas disponíveis use o comando `\l` . Para sair do psql use o comando `\q`.
+
+Com o container em funcionamento é possível acessar a API diretamente pelo web browser em (http://127.0.0.1:8000)[http://127.0.0.1:8000]
+

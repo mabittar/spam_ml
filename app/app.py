@@ -6,9 +6,8 @@ from urllib.error import HTTPError
 from urllib.request import Request
 from starlette.responses import JSONResponse
 
-from app.database.session import database
 from .settings import Settings
-from .endpoints import enpoints_list
+from .endpoints import endpoints_list
 from .infrastructure.error_handler import ErrorMessage
 
 
@@ -26,8 +25,8 @@ app = FastAPI(
     version="1.0.0",
 )
 
-if len(enpoints_list) > 0:
-    for endpoint in enpoints_list:
+if len(endpoints_list) > 0:
+    for endpoint in endpoints_list:
         app.include_router(endpoint)
 
 
