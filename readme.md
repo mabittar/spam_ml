@@ -1,12 +1,41 @@
 # Machine Learning Model using FastAPI
 
-## Configurações iniciais
+## Configurações iniciais 
 requisitos básicos:
 
 `
-pip install alembic asyncio asyncpg fastapi psycopg2 psycopg2[binary] python-jose tenacity pydantic[emailvalidator] python-multipart  
+pip install -r requirements.txt
 `
 ## Configuração de Ambiente
+Variáveis de ambiente:
+
+Para executar a API será necessário criar um arquivo .env na raiz do projeto, com as seguintes variáveis:
+```txt
+APP_ENV=local
+PROJECT_NAME="Spam Predictor with FastAPI"
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_SERVER=
+POSTGRES_PORT=
+POSTGRES_DB=
+JWT_SECRET=
+LOCAL_PORT=
+FIRST_SUPERUSER=
+FIRST_SUPERUSER_PASSWORD=
+FIRST_SUPERUSER_EMAIL=
+LOG_LEVEL=
+WORKERS_PER_CORE=1
+MAX_WORKERS=1
+```
+
+Para gerar um Token JWT out JWT_SECRET, execute na linha de comando:
+
+```bash
+$ openssl rand -hex 32 
+```
+
+será gerado algo como `b59cbee90cd294bf5e1b66fcd8a57fe8ce6999c2e0fa88304ff8c87766329937`. Cole na respectiva variável.
+
 
 
 ## Banco de dados e conexões
@@ -84,7 +113,7 @@ executar o build da nossa aplicaćão através do arquivo Dockerfile. Quando a a
 $ docker ps -a
 ```
 
-ambos os containers devem estar com o status UP.
+Ambos os containers devem estar com o status UP.
 
 para verificar os status do banco de dados execute:
 

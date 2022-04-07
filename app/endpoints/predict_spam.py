@@ -1,9 +1,11 @@
 import logging
 from pathlib import Path
 from joblib import load
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
+from app.endpoints.user import get_current_user
 from app.ml_models.ml_model_trainer import MLModelTrainer
+from app.models import User
 from app.models.predict_spam import SpamRequest, SpamResponse
 
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +34,7 @@ router = APIRouter(tags=["predict_spam"])
 
 
 @router.post("/predict_sentiment", status_code=200, response_model=SpamResponse)
-def predict_spam(predict: SpamRequest):
+def predict_spam(predict: SpamRequest, current_user: User = Depends(get_current_user)):
     logger.debug("Received message for analysis.")
     polarity = ""
     text_message = predict.text_message

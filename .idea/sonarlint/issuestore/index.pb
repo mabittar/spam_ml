@@ -8,8 +8,6 @@ M
 ?
 app/__init__.py,6/b/6b5a07a517e9a3845a279675e888c81b77b9d712
 D
-app/database/base.py,1/1/11edfc636b79eee74c313c9f75dbb90a5781ecf5
-D
 app/crud/__init__.py,0/8/0852f79d8bd7e43ead5975497bf38c75f504c306
 C
 app/models/token.py,0/d/0dc696b25b42c7b7ad86949c859d50a7f73fa750
@@ -30,3 +28,22 @@ O
 app/ml_models/data_processor.py,f/3/f334adbbcde4fec0adf764d24bf9d24be37328c8
 N
 app/infrastructure/security.py,f/1/f167e3149daedd2ee1c5e70ce7973bd642a48aaa
+C
+database.Dockerfile,d/c/dcf650c18215bf442cfcd8b42af83ff6d8ce51b7
+@
+requirements.txt,1/9/19359a61ae2446b51b549167b014da2fcf265768
+K
+app/middlewares/__init__.py,e/a/ea93656cf90074769e5197be8b90c040c1f48fc0
+:
+
+Dockerfile,6/6/6651ddff6eb82c840ced7c1dddee15c6e1913dd4
+I
+app/endpoints/__init__.py,9/d/9d78766c256d621818ca3074c06884cb3ab9fbc2
+G
+app/database/init_db.py,c/7/c7065901cda8eedcfcc9583f51d5522eb6e80a4d
+F
+app/endpoints/login.py,3/b/3b15752a71a2dc034e27942d79ec3f8bd6fc10a9
+J
+app/database/base_class.py,7/f/7fae063d80261b39a8786a714f500e69ef04c424
+D
+app/database/base.py,1/1/11edfc636b79eee74c313c9f75dbb90a5781ecf5

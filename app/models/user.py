@@ -64,7 +64,7 @@ class BaseUser(BaseModel):
     @validator("full_name")
     def validate_full_name(cls, v):
         try:
-            first_name, *last_name = v.split()
+            first_name, last_name = v.split()
             return v
         except Exception:
             raise HTTPException(status.HTTP_404_NOT_FOUND,

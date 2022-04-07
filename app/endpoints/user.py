@@ -105,4 +105,10 @@ async def get_user_by_id(_id: int, session: AsyncSession = Depends(get_session))
     return await user_controller.get(session=session, id=_id)
 
 
+@router.get("/whoami", status_code=status.HTTP_200_OK, response_model=UserSignOut)
+async def get_user_by_id(current_user: User = Depends(get_current_user)):
+    logger.info("Who am I endpoint")
+    return current_user
+
+
 

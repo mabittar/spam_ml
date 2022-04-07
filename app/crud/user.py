@@ -14,13 +14,13 @@ class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
         if username is not None:
             query = query.where(User.username == username)
         result = await session.execute(query)
-        result = result.scalars().one()
+        result = result.first()
         return result
 
     async def get_by_username(self, session: AsyncSession, *, username: str) -> Optional[BaseUser]:
         query = select(User).where(User.username == username)
         result = await session.execute(query)
-        result = result.scalars().one()
+        result = result.first()
         return result
 
     async def create(self, session: AsyncSession, *, obj_in: UserSignIn) -> UserSignIn:

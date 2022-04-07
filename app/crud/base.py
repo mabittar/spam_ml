@@ -26,7 +26,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     async def get(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
         query = select(self.model).where(self.model.id == id)
         result = await db.execute(query)
-        result = result.scalars().one()
+        result = result.first()
         return result
 
     async def get_multi(
@@ -34,7 +34,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> List[ModelType]:
         query = select(self.model).order_by(self.model.id).offset(skip).limit(limit)
         result = await db.execute(query)
-        result = result.scalars().all()
+        result = result.all()
         return result
 
     async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:
@@ -68,7 +68,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     async def remove(self, db: AsyncSession, *, id: int) -> ModelType:
         query = select(self.model).filter(self.model.id == id).first()
         result = await db.execute(query)
-        result = result.scalars().one()
-        await db.delete(result)
-        await db.commit()
-        return result
+        result = result.first()
+        if result:
+            await db.delete(result)
+            await db.commit()
+            return result
+        else:
+            return None
