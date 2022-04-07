@@ -55,7 +55,6 @@ SQLALCHEMY_DATABASE_URI: PostgresDsn = PostgresDsn.build(
 if settings.BIND_ENV:
     print(f"starting: {settings.PROJECT_NAME}")
 else:
-    use_bind = f"{settings.HOST}:{settings.PORT}"
-    print(f"starting: {settings.PROJECT_NAME} on {use_bind}")
+    print(f"starting: {settings.PROJECT_NAME} on {settings.HOST}")
 
 print(SQLALCHEMY_DATABASE_URI)

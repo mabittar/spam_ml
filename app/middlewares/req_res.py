@@ -29,6 +29,6 @@ class RequestResponse(BaseHTTPMiddleware):
 
     async def process_response(self, request: Request, response: Response) -> Response:
         took = time.perf_counter() - self.__start_time
-        str_took = str(('{0.4:f}'.format(took)))
-        logger.info(f"RESPONSE {request.method.upper()} {request.url.path} took: {str_took}")
+        str_took = '{:0.4f}'.format(took * 1000)
+        logger.info(f"RESPONSE {request.method.upper()} {request.url.path} took: {str_took} ms")
         return response

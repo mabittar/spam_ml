@@ -43,7 +43,6 @@ async def init_db(db: Session = Depends(get_session)) -> None:
         user_in = UserSignIn(
             full_name=settings.FIRST_SUPERUSER,  # type: ignore
             password=first_pass,
-            role="super admin",
             email=settings.FIRST_SUPERUSER_EMAIL,  # type: ignore
             document_number="98765432100"
         )

@@ -14,7 +14,6 @@ from app.crud.user import user_controller
 from app.database.session import get_session
 from app.models.user import User
 from app.settings import settings
-from app.infrastructure.security import create_access_token
 from app.models import UserSignOut, UserSignIn, BaseUser
 from app.models.token import TokenPayload
 

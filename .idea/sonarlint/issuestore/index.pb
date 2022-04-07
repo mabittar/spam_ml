@@ -28,7 +28,5 @@ I
 app/database/database.sql,2/6/26f814061d53b9f59f4b6b28242aa22120f0265a
 O
 app/ml_models/data_processor.py,f/3/f334adbbcde4fec0adf764d24bf9d24be37328c8
-?
-app/settings.py,b/0/b08759b2a00bbd04e3007be702a4a650f86024df
 N
 app/infrastructure/security.py,f/1/f167e3149daedd2ee1c5e70ce7973bd642a48aaa
