@@ -3,9 +3,8 @@ from datetime import datetime
 from typing import Optional
 from fastapi import HTTPException, status
 import enum
-import sqlalchemy
 from pydantic import BaseModel, EmailStr, Field, validator
-from sqlalchemy import Column, String, DateTime, Enum, Integer
+from sqlalchemy import Column, String, DateTime, Enum, Integer, func
 
 from app.database.base_class import Base
 from app.utils.document_validator import parse_doc_number
@@ -14,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class User(Base):
+class UserModel(Base):
     id: Column(Integer, primary_key=True, autoincrement=True, index=True)
     email: str = Column(String(120), unique=True, index=True, nullable=False)
     password: str = Column(String(255), nullable=False)
@@ -22,7 +21,7 @@ class User(Base):
     username: str = Column(String(200), index=True, unique=True, nullable=False)
     document_number: str = Column(String(14), nullable=False, unique=True)
     phone: str = Column(String(13), nullable=True)
-    created_at: datetime = Column(DateTime, nullable=False, server_default=sqlalchemy.func.now())
+    created_at: datetime = Column(DateTime, nullable=False, server_default=func.now())
     # TODO: fix migrations/vversions to handle with enum column
     # role: str = Column(Enum("super_admin", "admin", "user", name="user_role", create_type=False), nullable=False, default="user")
 

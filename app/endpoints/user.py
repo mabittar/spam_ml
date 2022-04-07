@@ -12,7 +12,7 @@ from starlette import status
 
 from app.crud.user import user_controller
 from app.database.session import get_session
-from app.models.user import User
+from app.models.usermodel import UserModel
 from app.settings import settings
 from app.models import UserSignOut, UserSignIn, BaseUser
 from app.models.token import TokenPayload
@@ -30,7 +30,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 def get_current_user(
         db: Session = Depends(get_session), token: str = Depends(reusable_oauth2)
-) -> User:
+) -> UserModel:
     try:
         logger.info("Get current user")
         payload = jwt.decode(
@@ -106,7 +106,7 @@ async def get_user_by_id(_id: int, session: AsyncSession = Depends(get_session))
 
 
 @router.get("/whoami", status_code=status.HTTP_200_OK, response_model=UserSignOut)
-async def get_user_by_id(current_user: User = Depends(get_current_user)):
+async def get_user_by_id(current_user: UserModel = Depends(get_current_user)):
     logger.info("Who am I endpoint")
     return current_user
 
