@@ -5,20 +5,20 @@ from app.crud.base import CRUDBase
 from app.infrastructure.security import get_password_hash, verify_password
 from typing import Any, Dict, Optional, Union
 
-from app.models import User, UserSignIn, UserSignOut, BaseUser
+from app.models import UserModel, UserSignIn, UserSignOut, BaseUser
 
 
-class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
+class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
     async def get_by_email(self, session: AsyncSession, *, email: str, username: Optional[str] = None) -> Optional[BaseUser]:
-        query = select(User).where(User.email == email)
+        query = select(UserModel).where(UserModel.email == email)
         if username is not None:
-            query = query.where(User.username == username)
+            query = query.where(UserModel.username == username)
         result = await session.execute(query)
         result = result.first()
         return result
 
     async def get_by_username(self, session: AsyncSession, *, username: str) -> Optional[BaseUser]:
-        query = select(User).where(User.username == username)
+        query = select(UserModel).where(UserModel.username == username)
         result = await session.execute(query)
         result = result.first()
         return result
@@ -26,7 +26,7 @@ class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
     async def create(self, session: AsyncSession, *, obj_in: UserSignIn) -> UserSignIn:
         # role = "user" if obj_in.role is None else obj_in.role noqa
 
-        db_obj = User(
+        db_obj = UserModel(
             email=obj_in.email, # noqa
             username=obj_in.username, # noqa
             password=get_password_hash(obj_in.password), # noqa
@@ -40,7 +40,7 @@ class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
         return db_obj
 
     async def update(
-        self, session: AsyncSession, *, db_obj: User, obj_in: Union[UserSignIn, Dict[str, Any]]
+        self, session: AsyncSession, *, db_obj: UserModel, obj_in: Union[UserSignIn, Dict[str, Any]]
     ) -> UserSignIn:
         if isinstance(obj_in, dict):
             update_data = obj_in
@@ -53,7 +53,7 @@ class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
         return await super().update(session, db_obj=db_obj, obj_in=update_data)
 
     async def authenticate(self, session: AsyncSession, *, email: str, password: str) -> Optional[UserSignIn]:
-        user: User = await self.get_by_email(session, email=email)
+        user: UserModel = await self.get_by_email(session, email=email)
         if not user:
             return None
         if not verify_password(password, user.password):
@@ -61,4 +61,4 @@ class CRUDUser(CRUDBase[User, UserSignIn, UserSignOut]):
         return user
     
     
-user_controller = CRUDUser(User)
+user_controller = CRUDUser(UserModel)

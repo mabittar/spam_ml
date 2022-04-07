@@ -2,11 +2,14 @@ import logging
 from pathlib import Path
 from joblib import load
 from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.crud.prediction import prediction_controller
+from app.database.session import get_session
 from app.endpoints.user import get_current_user
 from app.ml_models.ml_model_trainer import MLModelTrainer
-from app.models import User
-from app.models.predict_spam import SpamRequest, SpamResponse
+from app.models import UserModel
+from app.models import SpamRequest, SpamResponse
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,8 +37,22 @@ router = APIRouter(tags=["predict_spam"])
 
 
 @router.post("/predict_sentiment", status_code=200, response_model=SpamResponse)
-def predict_spam(predict: SpamRequest, current_user: User = Depends(get_current_user)):
-    logger.debug("Received message for analysis.")
+async def predict_spam(
+        predict: SpamRequest,
+        current_user: UserModel = Depends(get_current_user),
+        session: AsyncSession = Depends(get_session)
+):
+    logger.info("Received message for analysis.")
+    used_amount = await prediction_controller.get_used_by_month(
+        session=session, user_id=current_user.id)
+
+    if used_amount > 10:
+        raise HTTPException(
+            status_code=400,
+            detail="That's is too much for this month.",
+        )
+
+    logger.info("Analysing message")
     polarity = ""
     text_message = predict.text_message
     if not text_message:
@@ -50,6 +67,14 @@ def predict_spam(predict: SpamRequest, current_user: User = Depends(get_current_
     elif prediction[0] == 1:
         polarity = "Spam"
 
+    logger.info("Saving prediction")
+    await prediction_controller.save_prediction(
+        session=session,
+        user=current_user,
+        text_message=text_message,
+        result=prediction[0]
+    )
+    logger.debug("Returning Response")
     response = SpamResponse(
         text_message=text_message,
         spam_polarity=polarity
