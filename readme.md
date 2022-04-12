@@ -45,7 +45,7 @@ será gerado algo como `b59cbee90cd294bf5e1b66fcd8a57fe8ce6999c2e0fa88304ff8c877
 executar a partir da linha de comando a pasta raiz do projeto:
 
 `
-alembic init -t async app/dabase/migrations
+alembic init -t async app/database/migrations
 `
 
 verificar no arquivo alembic.ini se está apontando para a pasta de configuracoes:
@@ -57,7 +57,7 @@ e a variável:
 
 `#sqlalchemy.url = `
 
-editar o arquivo envp.py:
+editar o arquivo env.py:
 
 ```python 
 ...
@@ -79,7 +79,8 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.models.user import User # noqa
+from app.models.usermodel import UserModel # noqa
+from app.models.predictions import PredictionModel # noqa
 target_metadata = [Base.metadata]
 ...
 ```
