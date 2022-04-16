@@ -9,7 +9,12 @@ from app.models import UserModel, UserSignIn, UserSignOut, BaseUser
 
 
 class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
-    async def get_by_email(self, session: AsyncSession, *, email: str, username: Optional[str] = None) -> Optional[BaseUser]:
+    async def get_by_email(
+            self,
+            session: AsyncSession, *,
+            email: Optional[str] = None,
+            username: Optional[str] = None
+    ) -> Optional[BaseUser]:
         query = select(UserModel).where(UserModel.email == email)
         if username is not None:
             query = query.where(UserModel.username == username)
@@ -20,7 +25,7 @@ class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
     async def get_by_username(self, session: AsyncSession, *, username: str) -> Optional[BaseUser]:
         query = select(UserModel).where(UserModel.username == username)
         result = await session.execute(query)
-        result = result.first()
+        result = result.scalar()
         return result
 
     async def create(self, session: AsyncSession, *, obj_in: UserSignIn) -> UserSignIn:
@@ -52,8 +57,8 @@ class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
             update_data["password"] = hashed_password
         return await super().update(session, db_obj=db_obj, obj_in=update_data)
 
-    async def authenticate(self, session: AsyncSession, *, email: str, password: str) -> Optional[UserSignIn]:
-        user: UserModel = await self.get_by_email(session, email=email)
+    async def authenticate(self, session: AsyncSession, *, username: str, password: str) -> Optional[UserSignIn]:
+        user: UserModel = await self.get_by_username(session, username=username)
         if not user:
             return None
         if not verify_password(password, user.password):

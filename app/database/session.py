@@ -1,6 +1,5 @@
 from typing import AsyncGenerator
 
-from databases import Database
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -19,7 +18,6 @@ engine = create_async_engine(
 
 session_local = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False, autoflush=True)
 ScopedSession = scoped_session(session_local)
-database = Database(SQLALCHEMY_DATABASE_URI)
 
 
 async def get_session() -> AsyncGenerator:

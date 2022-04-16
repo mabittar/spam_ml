@@ -2,50 +2,19 @@ import logging
 from typing import List, Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.params import Security
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
-from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 from starlette import status
 
 from app.crud.user import user_controller
 from app.database.session import get_session
+from app.endpoints.login import get_current_user
 from app.models.usermodel import UserModel
-from app.settings import settings
 from app.models import UserSignOut, UserSignIn, BaseUser
-from app.models.token import TokenPayload
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Users"], prefix="/users")
-
-
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.PROJECT_NAME}/login/access-token"
-)
-
-
-def get_current_user(
-        db: Session = Depends(get_session), token: str = Depends(reusable_oauth2)
-) -> UserModel:
-    try:
-        logger.info("Get current user")
-        payload = jwt.decode(
-            token, str(settings.SECRET_KEY), algorithms=[Security.ALGORITHM]
-        )
-        token_data = TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-        )
-    user_db = user_controller.get(db, id=token_data.sub)
-    if not user_db:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user_db
 
 
 @router.post(
@@ -106,9 +75,19 @@ async def get_user_by_id(_id: int, session: AsyncSession = Depends(get_session))
 
 
 @router.get("/whoami", status_code=status.HTTP_200_OK, response_model=UserSignOut)
-async def get_user_by_id(current_user: UserModel = Depends(get_current_user)):
+async def who_am_i(
+        current_user: UserModel = Depends(get_current_user)):
     logger.info("Who am I endpoint")
-    return current_user
+    response = UserSignOut(
+        document_number=current_user.document_number,
+        email=current_user.email,
+        full_name=current_user.full_name,
+        username=current_user.username,
+        created_at=current_user.created_at,
+        id=current_user.id,
+        phone=current_user.phone
+    )
+    return response
 
 
 

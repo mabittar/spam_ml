@@ -1,16 +1,20 @@
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from fastapi import HTTPException, status
 import enum
 from pydantic import BaseModel, EmailStr, Field, validator
 from sqlalchemy import Column, String, DateTime, Enum, Integer, func
+from sqlalchemy.orm import relationship
 
 from app.database.base_class import Base
 from app.utils.document_validator import parse_doc_number
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from .predictions import PredictionModel # noqa
 
 
 class UserModel(Base):
@@ -22,8 +26,7 @@ class UserModel(Base):
     document_number: str = Column(String(14), nullable=False, unique=True)
     phone: str = Column(String(13), nullable=True)
     created_at: datetime = Column(DateTime, nullable=False, server_default=func.now())
-    # TODO: fix migrations/vversions to handle with enum column
-    # role: str = Column(Enum("super_admin", "admin", "user", name="user_role", create_type=False), nullable=False, default="user")
+    predictions = relationship("PredictionModel", back_populates="owner")
 
     # required in order to access columns with server defaults
     # or SQL expression defaults, subsequent to a flush, without

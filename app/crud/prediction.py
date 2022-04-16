@@ -15,7 +15,7 @@ class CRUDPrediction(CRUDBase[PredictionModel, SpamRequest, SpamResponse]):
     async def get_used_by_month(session: AsyncSession, user_id: int) -> Union[int, None]:
         today = datetime.now()
 
-        query = select(PredictionModel).where(PredictionModel.user_id == user_id)
+        query = select(PredictionModel).where(PredictionModel.owner_id == user_id)
         query = query.where(PredictionModel.created_at.month == today.month)
         result = await session.execute(query)
         result = result.count()
