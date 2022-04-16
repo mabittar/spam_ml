@@ -1,8 +1,8 @@
 from functools import lru_cache
+from urllib.error import HTTPError
 
 from fastapi import FastAPI
 from traceback import format_exc
-from urllib.error import HTTPError
 from urllib.request import Request
 from starlette.responses import JSONResponse
 
@@ -22,7 +22,7 @@ settings = get_settings()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    docs_url=f"/docs/",
+    openapi_url="/openapi.json",
     version="1.0.0",
 )
 

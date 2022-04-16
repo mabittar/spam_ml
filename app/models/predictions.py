@@ -1,12 +1,14 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from pydantic import BaseModel
 from sqlalchemy import Integer, Column, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import relationship
 
 from app.database.base_class import Base
-from app.models import UserModel
+
+if TYPE_CHECKING:
+    from .usermodel import UserModel # noqa
 
 
 class PredictionModel(Base):
@@ -14,12 +16,17 @@ class PredictionModel(Base):
     prediction_key: str = Column(String(36), unique=True, nullable=False)
     text_message: str = Column(String(360), unique=True, nullable=False)
     prediction: int = Column(Integer)
-    user_id: Column(String, ForeignKey(UserModel.id), nullable=False, index=True)
-    # user = relationship(
-    #     "UserModel", foreign_keys=[user_id], lazy="joined"
-    # )
+    owner_id = Column(Integer, ForeignKey("usermodel.id"))
+
+    owner = relationship(
+        "UserModel", back_populates="predictions"
+    )
     created_at: datetime = Column(DateTime, index=True, nullable=False, server_default=func.now())
 
+    # required in order to access columns with server defaults
+    # or SQL expression defaults, subsequent to a flush, without
+    # triggering an expired load
+    __mapper_args__ = {"eager_defaults": True}
 
 
 class SpamRequest(BaseModel):

@@ -30,7 +30,6 @@ from app.models.usermodel import UserModel # noqa
 from app.models.predictions import PredictionModel # noqa
 target_metadata = [Base.metadata]
 
-
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

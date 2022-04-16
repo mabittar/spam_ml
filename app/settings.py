@@ -3,8 +3,6 @@ import secrets
 
 from pydantic import BaseSettings, Field, PostgresDsn, EmailStr, SecretStr
 
-from starlette.datastructures import Secret
-
 logger = logging.getLogger(__name__)
 
 
@@ -56,5 +54,3 @@ if settings.BIND_ENV:
     print(f"starting: {settings.PROJECT_NAME}")
 else:
     print(f"starting: {settings.PROJECT_NAME} on {settings.HOST}")
-
-print(SQLALCHEMY_DATABASE_URI)

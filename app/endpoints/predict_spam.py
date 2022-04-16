@@ -1,12 +1,12 @@
 import logging
 from pathlib import Path
 from joblib import load
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Security
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.prediction import prediction_controller
 from app.database.session import get_session
-from app.endpoints.user import get_current_user
+from app.endpoints.login import get_current_user
 from app.ml_models.ml_model_trainer import MLModelTrainer
 from app.models import UserModel
 from app.models import SpamRequest, SpamResponse
@@ -39,7 +39,7 @@ router = APIRouter(tags=["predict_spam"])
 @router.post("/predict_sentiment", status_code=200, response_model=SpamResponse)
 async def predict_spam(
         predict: SpamRequest,
-        current_user: UserModel = Depends(get_current_user),
+        current_user: UserModel = Security(get_current_user, scopes=["spam_ml"]),
         session: AsyncSession = Depends(get_session)
 ):
     logger.info("Received message for analysis.")
@@ -79,4 +79,5 @@ async def predict_spam(
         text_message=text_message,
         spam_polarity=polarity
     )
+    await session.commit()
     return response

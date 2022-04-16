@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -9,4 +9,5 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    username: Optional[int] = None
+    username: Optional[str] = None
+    scopes: List[str] = []
