@@ -79,4 +79,5 @@ async def predict_spam(
         text_message=text_message,
         spam_polarity=polarity
     )
+    await session.commit()
     return response

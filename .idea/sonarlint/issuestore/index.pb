@@ -10,8 +10,6 @@ D
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 =
 .dockerignore,0/5/05a721ebe3ba0754116825ed1359ff1785f4bbac
-A
-app/data/spam.csv,d/c/dc94346c67cae223d4df3e27eabb0f785d5ba528
 U
 %app/notebooks/pre_process_train.ipynb,b/9/b9a112b086db0e27933d4ff3def90d6c76d10854
 I
