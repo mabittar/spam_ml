@@ -39,6 +39,7 @@ class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
             phone=obj_in.phone, # noqa
             document_number=obj_in.document_number # noqa
 
+
         )
         session.add(db_obj)
         await session.flush()

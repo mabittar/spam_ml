@@ -16,11 +16,17 @@ class PredictionModel(Base):
     prediction_key: str = Column(String(36), unique=True, nullable=False)
     text_message: str = Column(String(360), unique=True, nullable=False)
     prediction: int = Column(Integer)
-    owner_id: Column(Integer, ForeignKey("UserModel.id"))
+    owner_id = Column(Integer, ForeignKey("usermodel.id"))
+
     owner = relationship(
         "UserModel", back_populates="predictions"
     )
     created_at: datetime = Column(DateTime, index=True, nullable=False, server_default=func.now())
+
+    # required in order to access columns with server defaults
+    # or SQL expression defaults, subsequent to a flush, without
+    # triggering an expired load
+    __mapper_args__ = {"eager_defaults": True}
 
 
 class SpamRequest(BaseModel):

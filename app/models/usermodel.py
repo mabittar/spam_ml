@@ -26,6 +26,7 @@ class UserModel(Base):
     document_number: str = Column(String(14), nullable=False, unique=True)
     phone: str = Column(String(13), nullable=True)
     created_at: datetime = Column(DateTime, nullable=False, server_default=func.now())
+
     predictions = relationship("PredictionModel", back_populates="owner")
 
     # required in order to access columns with server defaults
