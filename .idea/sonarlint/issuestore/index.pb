@@ -14,12 +14,8 @@ U
 %app/notebooks/pre_process_train.ipynb,b/9/b9a112b086db0e27933d4ff3def90d6c76d10854
 I
 app/database/database.sql,2/6/26f814061d53b9f59f4b6b28242aa22120f0265a
-O
-app/ml_models/data_processor.py,f/3/f334adbbcde4fec0adf764d24bf9d24be37328c8
 @
 requirements.txt,1/9/19359a61ae2446b51b549167b014da2fcf265768
-K
-app/middlewares/__init__.py,e/a/ea93656cf90074769e5197be8b90c040c1f48fc0
 :
 
 Dockerfile,6/6/6651ddff6eb82c840ced7c1dddee15c6e1913dd4
@@ -27,8 +23,6 @@ I
 app/endpoints/__init__.py,9/d/9d78766c256d621818ca3074c06884cb3ab9fbc2
 9
 	readme.md,2/7/275d783e298228506068436512433d343feb52aa
-J
-app/middlewares/req_res.py,7/2/7216ce21ebc77e302a581696e3d6b3c584bcafe1
 E
 app/endpoints/root.py,9/d/9d8c8ac6d6ef5af76e4d2406660785a73c51e8e4
 D
@@ -47,3 +41,17 @@ C
 database.Dockerfile,d/c/dcf650c18215bf442cfcd8b42af83ff6d8ce51b7
 G
 app/database/init_db.py,c/7/c7065901cda8eedcfcc9583f51d5522eb6e80a4d
+?
+app/settings.py,b/0/b08759b2a00bbd04e3007be702a4a650f86024df
+C
+app/models/token.py,0/d/0dc696b25b42c7b7ad86949c859d50a7f73fa750
+N
+app/infrastructure/security.py,f/1/f167e3149daedd2ee1c5e70ce7973bd642a48aaa
+;
+alembic.ini,d/8/d84513684d01938b65661cf0358065b11872e9bf
+N
+app/database/migrations/env.py,4/3/43cee7dd6c312430d50916e0821d2a9bc5242f1a
+F
+app/endpoints/login.py,3/b/3b15752a71a2dc034e27942d79ec3f8bd6fc10a9
+@
+app/crud/base.py,5/a/5afee768463b00afa87804306c2eceb8b0c6dad7

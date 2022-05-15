@@ -8,13 +8,13 @@ from sqlalchemy.orm import relationship
 from app.database.base_class import Base
 
 if TYPE_CHECKING:
-    from .usermodel import UserModel # noqa
+    from .user_model import UserModel # noqa
 
 
 class PredictionModel(Base):
     id: int = Column(Integer, primary_key=True, autoincrement=True, index=True)
     prediction_key: str = Column(String(36), unique=True, nullable=False)
-    text_message: str = Column(String(360), unique=True, nullable=False)
+    text_message: str = Column(String(360), nullable=False)
     prediction: int = Column(Integer)
     owner_id = Column(Integer, ForeignKey("usermodel.id"))
 

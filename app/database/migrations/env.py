@@ -26,8 +26,8 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.models.usermodel import UserModel # noqa
-from app.models.predictions import PredictionModel # noqa
+from app.models.user_model import UserModel # noqa
+from app.models.prediction_model import PredictionModel # noqa
 target_metadata = [Base.metadata]
 
 # other values from the config, defined by the needs of env.py,

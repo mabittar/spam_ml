@@ -17,7 +17,7 @@ class CRUDPrediction(CRUDBase[PredictionModel, SpamRequest, SpamResponse]):
         query = select(PredictionModel).where(PredictionModel.owner_id == user_id)
         query = query.filter(PredictionModel.created_at >= todays_datetime)
         result = await session.execute(query)
-        result = result.all()
+        result = result.all()  # It returns a list
         return len(result)
 
     async def save_prediction(self, session: AsyncSession, *, user: UserModel, text_message: str, result: bool) -> PredictionModel:

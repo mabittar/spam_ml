@@ -4,7 +4,7 @@ from typing import Optional, TYPE_CHECKING
 from fastapi import HTTPException, status
 import enum
 from pydantic import BaseModel, EmailStr, Field, validator
-from sqlalchemy import Column, String, DateTime, Enum, Integer, func
+from sqlalchemy import Column, String, DateTime, Integer, func
 from sqlalchemy.orm import relationship
 
 from app.database.base_class import Base
@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from .predictions import PredictionModel # noqa
+    from .prediction_model import PredictionModel # noqa
 
 
 class UserModel(Base):
@@ -27,7 +27,7 @@ class UserModel(Base):
     phone: str = Column(String(13), nullable=True)
     created_at: datetime = Column(DateTime, nullable=False, server_default=func.now())
 
-    predictions = relationship("PredictionModel", back_populates="owner")
+    predictions = relationship("PredictionModel", back_populates="owner", uselist=True)
 
     # required in order to access columns with server defaults
     # or SQL expression defaults, subsequent to a flush, without

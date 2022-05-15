@@ -19,13 +19,13 @@ class CRUDUser(CRUDBase[UserModel, UserSignIn, UserSignOut]):
         if username is not None:
             query = query.where(UserModel.username == username)
         result = await session.execute(query)
-        result = result.first()
+        result = result.first()  # It applies a limit of one and returns the first result as a scalar.
         return result
 
     async def get_by_username(self, session: AsyncSession, *, username: str) -> Optional[BaseUser]:
         query = select(UserModel).where(UserModel.username == username)
         result = await session.execute(query)
-        result = result.scalar()
+        result = result.scalar()  # It invokes the one() method, and upon success returns the first column of the row as follows −
         return result
 
     async def create(self, session: AsyncSession, *, obj_in: UserSignIn) -> UserSignIn:

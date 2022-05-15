@@ -8,7 +8,7 @@ from starlette import status
 from app.crud.user import user_controller
 from app.database.session import get_session
 from app.endpoints.login import get_current_user
-from app.models.usermodel import UserModel
+from app.models.user_model import UserModel
 from app.models import UserSignOut, UserSignIn, BaseUser
 
 logging.basicConfig(level=logging.INFO)

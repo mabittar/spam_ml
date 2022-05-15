@@ -77,7 +77,8 @@ async def predict_spam(
     logger.debug("Returning Response")
     response = SpamResponse(
         text_message=text_message,
-        spam_polarity=polarity
+        spam_polarity=polarity,
+        month_used_amount=used_amount
     )
     await session.commit()
     return response

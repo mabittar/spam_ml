@@ -20,16 +20,6 @@ def parse_doc_number(document_number: str) -> str:
 
 
 def is_valid_document_number(document_number: str) -> bool:
-    """
-    >>> is_valid_document_number("5335109000101")
-    False
-    >>> is_valid_document_number("88592631656921")
-    True
-    >>> is_valid_document_number("02966150483")
-    True
-    >>> is_valid_document_number("02966150481")
-    False
-    """
 
     if len(document_number) < 14:
         return CPF.validate(document_number)

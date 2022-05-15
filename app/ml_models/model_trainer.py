@@ -1,6 +1,7 @@
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import MultinomialNB
 
+
 def run_model_training(X_train, X_test, y_train, y_test):
     clf = MultinomialNB()
     clf.fit(X_train,y_train)

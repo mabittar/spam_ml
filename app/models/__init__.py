@@ -1,2 +1,2 @@
-from .usermodel import UserModel, BaseUser, UserSignIn, UserSignOut
-from .predictions import PredictionModel, SpamRequest, SpamResponse
+from .user_model import UserModel, BaseUser, UserSignIn, UserSignOut
+from .prediction_model import PredictionModel, SpamRequest, SpamResponse
